@@ -16,9 +16,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from django.conf.urls.static import static
+from django.conf import settings
+
+from myInternetPrj.settings import MEDIA_URL
+
 urlpatterns = [
     path('blog/', include('blog.urls')), # 서버ip/blog
     path('admin/', admin.site.urls), # 서버IP/ADMIN
     path('', include('single_pages.urls')),  #서버IP/
 
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # 서버IP/media/
+
+
+
+
+
+
