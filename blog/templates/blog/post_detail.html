@@ -8,7 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Blog Post - Start Bootstrap Template</title>
+        <title>{{ post.title }}</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Core theme CSS (includes Bootstrap)-->
@@ -39,6 +39,7 @@
                         <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
                         <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
                         <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Blog</a></li>
+                        <li class="nav-item"><a class="nav-link" href="about_me.html">About Me></a></li>
                     </ul>
                 </div>
             </div>
@@ -46,9 +47,9 @@
         <!-- Page content-->
         <div class="container mt-5">
             <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-8" id="main-area">
                     <!-- Post content-->
-                    <article>
+                    <div id="post-area">
                         <!-- Post header-->
                         <header class="mb-4">
                             <!-- Post title-->
@@ -84,7 +85,7 @@
                                 </a>
                             {% endif %}
                            </section>
-                    </article>
+                    </div>
                     <!-- Comments section-->
                     <section class="mb-5">
                         <div class="card bg-light">

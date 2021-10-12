@@ -38,14 +38,11 @@
             >
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="blog_list.html"
-              ><i class="fas fa-blog"></i
-            ></a>
+            <a class="nav-link" href="blog_list.html">Blog</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="about_me.html"
-              ><i class="far fa-user"></i
-            ></a>
+              >About Me></a>
           </li>
           <li class="nav-item dropdown">
             <a
@@ -143,7 +140,9 @@
     </div>
     <div class="container bg-primary">
       <div class="row">
-        <div class="col-md-8 mx-auto bg-secondary">
+        <div class="col-md-8 col-lg-9" id="main-area">
+          <h1>Blog</h1>
+          {%  if post_list.exists %}
           {% for p in post_list  %}
           <!-- Blog post-->
           <div class="card mb-4 mt-4">
@@ -168,6 +167,9 @@
             </div>
           </div>
           {% endfor %}
+          {% else %}
+            <h2>아직 게시물이 없습니다.</h2>
+          {% endif %}
           <!-- Pagination-->
           <!-- <nav aria-label="Pagination">
             <hr class="my-0" /> -->
