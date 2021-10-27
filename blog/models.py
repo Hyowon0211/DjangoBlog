@@ -3,6 +3,17 @@ from django.contrib.auth.models import User
 import os
 # Create your models here.
 
+class Category(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'Categories'  #복수형이걸로 쓰겠다
+
+
 class Post(models.Model):
     title = models.CharField(max_length=30)
     hook_text = models.CharField(max_length=100, blank=True)
@@ -14,7 +25,13 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     #author = models.ForeignKey(User, on_delete=models.CASCADE) # 모델에서 사용자 사라지면 ㄱ 사용자가 작성한 포스트도 다 삭제되라
-    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL) # user삭제돼도 포스트는 남겨.
+    author = models.ForeignKey(User, null=True,  on_delete=models.SET_NULL) # user삭제돼도 포스트는 남겨.
+
+    category = models.ForeignKey(Category, null=True, blank=True,on_delete=models.SET_NULL)
+# null=True는 없어졌을 때 null로 한다는거지 첨부터 등록할 때부터 값을 안넣어도 된다 아님
+    # 첨부터 안넣어도 되는거 허용하려면 blank=True해야함
+
+
     def __str__(self):
         return f'[{self.pk}] {self.title} ::: {self.author}'
 

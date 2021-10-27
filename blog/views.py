@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
-from .models import Post
+from .models import Post, Category
 
 # Create your views here.
 
@@ -11,12 +11,24 @@ from .models import Post
 class PostList(ListView) :
     model = Post
     ordering = '-pk'  # 최신순으로
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(PostList, self).get_context_data()
+        context['categories'] = Category.objects.all()
+        context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        return context
  #   template_name = 'blog/index.html'    # 직접부르기
  # post_list.html
 
 
 class PostDetail(DetailView) :
     model = Post
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(PostDetail, self).get_context_data()
+        context['categories'] = Category.objects.all()
+        context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        return context
 # post_detail.html       # model이름_detail.html 이라는 템플릿이 불리어지게 됨. 자동으로?? .  html또 만들필요없다했는데 난 걍 만들어봄
 
 
