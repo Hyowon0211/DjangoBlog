@@ -4,9 +4,28 @@ from .models import Post
 
 
 # Create your tests here.
-class TestView(TestCase):
+class TestView(TestCase):  # 뷰테스트
     def setUp(self):
-        self.client = Client()
+        self.client = Client()  # client는 test를 위한 가상의 사용자
+
+
+    def navbar_test(self, soup):
+        # 네비게이션바가 있다
+        navbar = soup.nav
+        # 네비게이션바에 Blog, AboutMe 라는 문구가 있다.
+        self.assertIn('Blog', navbar.text)
+        self.assertIn('About Me', navbar.text)
+
+        logo = navbar.find('a', text='Internet Programming')
+        self.assertEqual(logo.attrs['href'], '/')
+        home = navbar.find('a', text='Home')
+        self.assertEqual(home.attrs['href'], '/')
+        blog = navbar.find('a', text='Blog')
+        self.assertEqual(blog.attrs['href'], '/blog/')
+        about = navbar.find('a', text='About Me')
+        self.assertEqual(about.attrs['href'], '/about_me/')
+
+
 
 
     def test_post_list(self):
@@ -17,11 +36,8 @@ class TestView(TestCase):
         # 페이지 타이틀 'Blog'
         soup = BeautifulSoup(response.content, 'html.parser')
         self.assertEqual(soup.title.text, 'Blog')
-        # 네비게이션바가 있다
-        navbar = soup.nav
-        # 네비게이션바에 Blog, AboutMe 라는 문구가 있다.
-        self.assertIn('Blog', navbar.text)
-        self.assertIn('About Me', navbar.text)
+
+        self.navbar_test(soup)
 
         # 포스트(게시물)이 하나도 없는 경우
         self.assertEqual(Post.objects.count(), 0)
@@ -39,7 +55,7 @@ class TestView(TestCase):
             content='1등이 전부가 아니잖아요'
         )
         self.assertEqual(Post.objects.count(), 2)
-        # 목록 페이지를 새롭게 불러와서
+        # 목록 페이지를 새롭게 불러와서 (새로고침 했을 때)
         response = self.client.get('/blog/')
         self.assertEqual(response.status_code, 200)
         soup = BeautifulSoup(response.content, 'html.parser')
@@ -63,9 +79,7 @@ class TestView(TestCase):
         self.assertEqual(response.status_code, 200)
         soup = BeautifulSoup(response.content, 'html.parser')
         # 포스트목록과 같은 네비게이션바가 있는가
-        navbar = soup.nav
-        self.assertIn('Blog', navbar.text)
-        self.assertIn('About Me', navbar.text)
+        self.navbar_test(soup)
         # 포스트의 title은 웹브라우저의 title에 있는가
         self.assertIn(post_001.title, soup.title.text)
         # 포스트의 title은 포스트영역에도 있는가
@@ -76,3 +90,6 @@ class TestView(TestCase):
         # 아직 작성중
         # 포스트의 내용이 있는가
         self.assertIn(post_001.content, post_area.text)
+
+
+
