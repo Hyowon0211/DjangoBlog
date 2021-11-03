@@ -1,9 +1,24 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
-from .models import Post, Category
+from .models import Post, Category, Tag
+
 
 # 템플릿 연결해주는게 뷰 역할
+
+def tag_page(request, slug):
+        tag = Tag.objects.get(slug=slug)
+        post_list = tag.post_set.all() # 해당 tag와 연결되어있는모든 post데이터 가져와 # Post.objects.filter(tags=tag)다대다라 이렇겐 안됨
+
+        return render(request, 'blog/post_list.html',
+                      {
+                          'post_list' : post_list,
+                           'categories' : Category.objects.all(),
+                            'no_category_post_count' : Post.objects.filter(category=None).count(),
+                            'tag' : tag,
+                      }
+
+                      )
 
 def category_page(request, slug):
     if slug == 'no_category':
