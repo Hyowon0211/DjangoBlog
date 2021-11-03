@@ -7,7 +7,7 @@ urlpatterns = [
 
 
     # 뷰를 부르는 부분을 함수가 아니라 클래스로 부름
-
+    path('create_post/', views.PostCreate.as_view()),
     path('tag/<str:slug>',views.tag_page), # 서버IP/blog/tag/slug
     path('category/<str:slug>', views.category_page), # 서버IP/blog/slug
     path('<int:pk>/', views.PostDetail.as_view()),
