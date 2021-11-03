@@ -3,10 +3,27 @@ from django.views.generic import ListView, DetailView
 
 from .models import Post, Category
 
-# Create your views here.
-
-
 # 템플릿 연결해주는게 뷰 역할
+
+def category_page(request, slug):
+    if slug == 'no_category':
+        category = '미분류'
+        post_list = Post.objects.filter(category=None)
+    else:
+        category = Category.objects.get(slug=slug)
+        post_list = Post.objects.filter(category=category)
+    return render(request, 'blog/post_list.html',
+                  { # 기존의 post_list 템플릿 그대로 쓰는데!!
+                      # category 를 받아와서 그 카테고리 포스트만 보여주게(filter() 사용)
+                      'post_list' :post_list,
+                      'categories' : Category.objects.all(),
+                      'no_category_post_count' : Post.objects.filter(category=None).count(), # 카테고리가 없는 글 개수
+                      'category' : category
+                  }
+    )
+
+
+
 
 class PostList(ListView) :
     model = Post
