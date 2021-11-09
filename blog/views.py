@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView, CreateView
-
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.core.exceptions import PermissionDenied
 from .models import Post, Category, Tag
 
 
@@ -55,9 +55,19 @@ def category_page(request, slug):
     )
 
 
+class PostUpdate(LoginRequiredMixin, UpdateView): # 모델명_form (자동) -> 근데 post create랑 똑같아서 헷갈리니까 별ㅗ로 만들어줘야함
+    model = Post
+    fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category', 'tags']
 
+    template_name = 'blog/post_update_form.html'
+    # 장고에서 get으로 접근했는지 post로 접근 해는지 확인해주는 함수 dispatch
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user == self.get_object().author:
+            return super(PostUpdate, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
 
-class PostList(ListView) :
+class PostList(ListView):
     model = Post
     ordering = '-pk'  # 최신순으로
 
@@ -78,6 +88,7 @@ class PostDetail(DetailView) :
         context = super(PostDetail, self).get_context_data()
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
+       # context['user'] = self.request.user # 이거 안해도 post_detail.html에서 user쓸 수 있는거야..?
         return context
 # post_detail.html       # model이름_detail.html 이라는 템플릿이 불리어지게 됨. 자동으로?? .  html또 만들필요없다했는데 난 걍 만들어봄
 
