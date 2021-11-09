@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 import os
 # Create your models here.
+#from single_pages.models import Hello
+import single_pages
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -47,6 +50,7 @@ class Post(models.Model):
     # 첨부터 안넣어도 되는거 허용하려면 blank=True해야함
     tags = models.ManyToManyField(Tag, blank=True)
                             # blank=True admin자체에서 빈값으로 저장하는것을 허용
+    h = models.ManyToManyField('single_pages.Hello', blank=True)
     def __str__(self):
         return f'[{self.pk}] {self.title} ::: {self.author}'
 

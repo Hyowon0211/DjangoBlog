@@ -9,6 +9,8 @@ class TestView(TestCase):  # 뷰테스트
     def setUp(self):
         self.client = Client()  # client는 test를 위한 가상의 사용자
         self.user_james = User.objects.create_user(username='James', password='somepassword')
+        self.user_james.is_staff = True
+        self.user_james.save()
         self.user_trump = User.objects.create_user(username='Trump', password='somepassword')
 
         self.category_programming = Category.objects.create(name='programming', slug='programming')
@@ -110,7 +112,12 @@ class TestView(TestCase):  # 뷰테스트
         self.client.login(username='Trump', password='somepassword')
         response = self.client.get('/blog/create_post/')
         # 정상적으로 페이지가 로드
-        self.assertEqual(response.status_code, 200)
+        self.assertNotEqual(response.status_code, 200)
+
+        self.client.login(username='James', password='somepassword')
+        response = self.client.get('/blog/create_post/')
+        self.assertEqual(response.status_code,200)
+
         # 페이지 타이틀 'Blog'
         soup = BeautifulSoup(response.content, 'html.parser')
         self.assertEqual(soup.title.text, 'Create Post - Blog')
@@ -125,7 +132,7 @@ class TestView(TestCase):  # 뷰테스트
                          )
         last_post = Post.objects.last()
         self.assertEqual(last_post.title, "Post form 만들기")
-        self.assertEqual(last_post.author.username, 'Trump')
+        self.assertEqual(last_post.author.username, 'James')
 
 
     def test_post_list(self):
