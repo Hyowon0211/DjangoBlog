@@ -8,6 +8,10 @@
       {% csrf_token %}  <!-- 반드시 넣어야함 공격을 막는다고? -->
       <table>
           {{form}}
+          <tr>
+              <th><label for="id_tags_str">Tags:</label></th>
+              <td><input type="text" name="tags_str" value="" maxlength="30" required id="id_tags_str"></td>
+          </tr>
       </table>
         <button type="submit" class="btn btn-primary float-right">Submit</button>
     </form>
