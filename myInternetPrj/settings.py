@@ -39,6 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'markdownx',
     'crispy_forms',
+    'django.contrib.sites', # all auth를 위한 앱
+    'allauth', # for all auth
+    'allauth.account', # for all auth
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     'blog',
     'single_pages',
 ]
@@ -103,6 +108,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS=(
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+)
+
+SITE_ID = 1  #admin에서 sites에 등록되어있는 것중에 첫번째걸로 한다
+
+ACCOUNT_EMAIL_REQUIRED = True # 이메일을 꼭 받겠다
+ACCOUNT_EMAIL_VERIFICATION = 'none' # 이메일 유효한지는 확인 안해
+
+#로그인 성공시 리다이렉트 주소
+LOGIN_REDIRECT_URL = '/blog/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
