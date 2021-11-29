@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -30,7 +29,6 @@ if os.environ.get('DJANGO_ALLOWED_HOSTS'):
 else:
     ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,9 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'markdownx',
     'crispy_forms',
-    'django.contrib.sites', # all auth를 위한 앱
-    'allauth', # for all auth
-    'allauth.account', # for all auth
+    'django.contrib.sites',  # all auth를 위한 앱
+    'allauth',  # for all auth
+    'allauth.account',  # for all auth
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'blog',
@@ -81,17 +79,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'myInternetPrj.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.environ.get("SQL_ENGINE", 'django.db.backends.sqlite3'), # SQL_ENGINE없으면 sqlite
+        'NAME': os.environ.get("SQL_DATABASE", os.path.join(BASE_DIR, 'db.sqlite3')), # SQL_DATABASE 없으면 db.sqlite3
+        'USER': os.environ.get("SQL_USER", 'user'),
+        'PASSWORD': os.environ.get("SQL_PASSWORD", 'password'),
+        'HOST': os.environ.get("SQL_HOST", 'localhost'),
+        'PORT': os.environ.get("SQL_PORT", '5432'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -111,17 +111,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTHENTICATION_BACKENDS=(
+AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend'
 )
 
-SITE_ID = 1  #admin에서 sites에 등록되어있는 것중에 첫번째걸로 한다
+SITE_ID = 1  # admin에서 sites에 등록되어있는 것중에 첫번째걸로 한다
 
-ACCOUNT_EMAIL_REQUIRED = True # 이메일을 꼭 받겠다
-ACCOUNT_EMAIL_VERIFICATION = 'none' # 이메일 유효한지는 확인 안해
+ACCOUNT_EMAIL_REQUIRED = True  # 이메일을 꼭 받겠다
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # 이메일 유효한지는 확인 안해
 
-#로그인 성공시 리다이렉트 주소
+# 로그인 성공시 리다이렉트 주소
 LOGIN_REDIRECT_URL = '/blog/'
 
 # Internationalization
@@ -137,14 +137,13 @@ USE_L10N = True
 
 USE_TZ = False
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT =os.path.join (BASE_DIR, '_media')
+MEDIA_ROOT = os.path.join(BASE_DIR, '_media')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
