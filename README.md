@@ -1,1 +1,1 @@
-# DSInternetProg
+# DjangoBlog
